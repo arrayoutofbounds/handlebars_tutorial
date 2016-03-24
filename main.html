@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello Handlebars</title>
+	<script src="handlebars-v4.0.5.js"></script>
+	<style type="text/css">
+		.red{ color: red ;}
+	</style>
+</head>
+<body>
+
+<div id="derekData">
+
+<script type="text/javascript">
+	
+	// how the data should come out on the screen. {{}} is mustache code
+	var myInfo = "<p> My name is {{name}} and I live at {{street}} in {{city}},{{state}}</p>";
+
+	// joins data in html and js
+	var template = Handlebars.compile(myInfo); // creates output
+	var data = template({name:"Derek",street:"123 main st",city:"auckland",state:"none"});
+
+	document.getElementById("derekData").innerHTML += data;
+
+</script>
+</div>
+
+<div id="quote-data"></div>
+
+<!-- This uses the each to print array, triple {{{}}} so that te tages are printed . Make link is a helper function-->
+<script id="quote-template" type="text/x-handlebars-template">
+	
+<h3>Favourite {{name}} Quotes</h3>
+<ol>
+	{{#each quotes}}
+	<li>{{quote}}
+	{{/each}}
+</ol>
+
+{{{yogiBio}}}<br /><br /> 
+
+{{makeLink "Yogiiiiii" "http://www.google.com"}} <br />
+
+{{changeColour "Make my text red" colour="red"}} <br />
+
+</script>
+
+<script type="text/javascript">
+	var quoteInfo = document.getElementById("quote-template").innerHTML;
+
+	// this is the helper function being registered. It gets 2 pieces of data. define helper before the data
+	Handlebars.registerHelper("makeLink",function(text,url){
+		// escapes string to avoid code injection etc
+		text = Handlebars.Utils.escapeExpression(text);
+		url = Handlebars.Utils.escapeExpression(url);
+
+		// generate custom link
+		var theLink = '<a href="' + url + '">' + text + '</a>';
+		// returns the link. safe string stops it from being escaped. dosent get rid of tags i.e does for triple hash does.
+		return new Handlebars.SafeString(theLink);
+
+	});
+
+	Handlebars.registerHelper("changeColour",function(text,options){
+		text = Handlebars.Utils.escapeExpression(text);
+
+		if(options.hash.colour == "red"){
+			return new Handlebars.SafeString("<span class='red'> " + text + "</span>");
+		}
+	})
+
+	var template = Handlebars.compile(quoteInfo);
+
+	var quotedata = template({name:"yogi bear",quotes:[{quote:"a"},{quote:"b"}],
+		yogiBio:"<i> heeeeeyyyyy<i/>"
+	});
+
+	document.getElementById("quote-data").innerHTML  += quotedata;
+</script>
+
+
+
+</body>
+</html>
