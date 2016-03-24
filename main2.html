@@ -28,7 +28,20 @@ hey
 no
 {{/if}}
 
+{{> myName}}
+
+<div class="post">
+	{{> askQuestion tagName="h2"}}
+	<h2>Suggestions</h2>
+
+	{{#each comments}}
+	{{> askQuestion tagName="h3"}}
+	{{/each}}
+</div>
+
 </script>
+
+<!-- my name is a partial. It is for reuse. It does not compute anthing -->
 
 <script type="text/javascript">
 	var templateinfo = document.getElementById('the-template').innerHTML;
@@ -69,7 +82,17 @@ no
 		}
 	})
 
-	var templateData = template({});
+	// handle partial
+	Handlebars.registerPartial("myName",'{{name}}'); // gets name from data
+
+
+	Handlebars.registerPartial("askQuestion",'<{{tagName}}>{{author}}</tagName>' + '<div class="comment">{{comment}}</div>');
+
+	var templateData = template({name:"derek",author:"asdada",comment:"where are the dogs",comments:[{
+			author:"a",
+			comment:"they are gone"
+		}
+		]});
 
 	document.getElementById("contentDiv").innerHTML += templateData;
 
