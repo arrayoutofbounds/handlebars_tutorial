@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello</title>
+	<script src="handlebars-v4.0.5.js"></script>
+</head>
+<body>
+
+<div id="contentDiv"></div>
+
+<script id="the-template" type="text/x-handlebars-template">
+
+{{#makeRadio "size"}}
+	Small
+	Medium
+	Large
+{{/makeRadio}}
+
+{{#areEqual 1 1}}
+Numbers are Equal
+{{else}}
+Numbers are not Equal
+{{/areEqual}} <br />
+
+{{#if "isActive"}}
+hey
+{{else}}
+no
+{{/if}}
+
+</script>
+
+<script type="text/javascript">
+	var templateinfo = document.getElementById('the-template').innerHTML;
+
+	// compile
+	var template = Handlebars.compile(templateinfo);
+
+	//block helper
+	Handlebars.registerHelper("makeRadio",function(name,options){
+		var radioList = options.fn(); // return string and save in radiolist
+
+		radioList = radioList.trim().split("\n");
+
+		var output = "";
+
+		for ( var val in radioList){
+			var item = radioList[val].trim();
+			output += '<input type="radio" name"' + name + '" value="' + item + '">' + item +  '<br />';
+		}
+
+		return output;
+
+	});
+
+	Handlebars.registerHelper("areEqual",function(num1,num2,options){
+		if(num1 == num2){
+			return options.fn(this); //first template
+		}else{
+			return options.inverse(this);
+		}
+	});
+
+	Handlebars.registerHelper("if",function(data,options){
+		if (data === "isActive"){
+			return options.fn(this);
+		}else{
+			return options.inverse(this);
+		}
+	})
+
+	var templateData = template({});
+
+	document.getElementById("contentDiv").innerHTML += templateData;
+
+</script>
+
+</body>
+</html>
